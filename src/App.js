@@ -7,8 +7,14 @@ import { Form, Field } from 'react-final-form'
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const onSubmit = async values => {
-  await sleep(300)
+  // await sleep(300)
+  priceCalc(values)
   window.alert(JSON.stringify(values, 0, 2))
+}
+
+const priceCalc = (props) => {
+  console.log(props)
+  console.log(props.notes)
 }
 
 const MyForm = () => (
@@ -19,121 +25,99 @@ const MyForm = () => (
     </a>
     <Form
       onSubmit={onSubmit}
-      initialValues={{ stooge: 'larry', employed: false }}
+      initialValues={{ customerType: 'b2b', sendToEmail: true }}
       render={({ handleSubmit, form, submitting, pristine, values }) => (
         <form onSubmit={handleSubmit}>
           <div>
-            <label>First Name</label>
+            <label>Wall Height</label>
             <Field
-              name="firstName"
+              name="segmentheight"
               component="input"
-              type="text"
-              placeholder="First Name"
+              type="number"
+              placeholder="Segment height in mm"
             />
           </div>
           <div>
-            <label>Last Name</label>
+            <label>Wall Width</label>
             <Field
-              name="lastName"
+              name="segmenwidth"
               component="input"
-              type="text"
-              placeholder="Last Name"
+              type="number"
+              placeholder="Segment width in mm"
             />
           </div>
           <div>
-            <label>Employed</label>
-            <Field name="employed" component="input" type="checkbox" />
-          </div>
-          <div>
-            <label>Favorite Color</label>
+            <label>Panel Type</label>
             <Field name="favoriteColor" component="select">
               <option />
-              <option value="#ff0000">❤️ Red</option>
-              <option value="#00ff00">💚 Green</option>
-              <option value="#0000ff">💙 Blue</option>
+              <option value="#ff0000">❤️ Aquapanel Cement Board Floor</option>
+              <option value="#00ff00">💚 Aquapanel Cement Board Floor MF</option>
+              <option value="#0000ff">💙 Aquapanel Indoor Panel</option>
             </Field>
           </div>
           <div>
-            <label>Toppings</label>
-            <Field name="toppings" component="select" multiple>
-              <option value="chicken">🐓 Chicken</option>
-              <option value="ham">🐷 Ham</option>
-              <option value="mushrooms">🍄 Mushrooms</option>
-              <option value="cheese">🧀 Cheese</option>
-              <option value="tuna">🐟 Tuna</option>
-              <option value="pineapple">🍍 Pineapple</option>
-            </Field>
-          </div>
-          <div>
-            <label>Sauces</label>
+            <label>Requirements</label>
             <div>
               <label>
                 <Field
-                  name="sauces"
+                  name="requirements"
                   component="input"
                   type="checkbox"
-                  value="ketchup"
+                  value="radiation-protection"
                 />{' '}
-                Ketchup
+                Radiation protection
               </label>
               <label>
                 <Field
-                  name="sauces"
+                  name="requirements"
                   component="input"
                   type="checkbox"
-                  value="mustard"
+                  value="bulletproof-wall"
                 />{' '}
-                Mustard
-              </label>
-              <label>
-                <Field
-                  name="sauces"
-                  component="input"
-                  type="checkbox"
-                  value="mayonnaise"
-                />{' '}
-                Mayonnaise
-              </label>
-              <label>
-                <Field
-                  name="sauces"
-                  component="input"
-                  type="checkbox"
-                  value="guacamole"
-                />{' '}
-                Guacamole 🥑
+                Bulletproof wall
               </label>
             </div>
           </div>
           <div>
-            <label>Best Stooge</label>
+            <label>Additional</label>
+            <Field name="additionl" component="select" multiple>
+              <option value="kleber">Aquapanel Nutkleber</option>
+              <option value="tipla">Aquapalne Tiple</option>
+              <option value="armierungsband">Aquapanel Armierungsband aussen</option>
+              <option value="fugen">Aquapanel Fugen und Flächenspachtel</option>
+              <option value="gruierung">Aquapanel Grundierung aussen</option>
+              <option value="gewebe">Aquapanel Gewebe plus</option>
+            </Field>
+          </div>
+          <div>
+            <label>Customer</label>
+            <Field
+              name="customer"
+              component="input"
+              type="text"
+              placeholder="Customer Name"
+            />
+          </div>
+          <div>
+            <label>Customer Type</label>
             <div>
               <label>
                 <Field
-                  name="stooge"
+                  name="customerType"
                   component="input"
                   type="radio"
-                  value="larry"
+                  value="b2b"
                 />{' '}
-                Larry
+                B2B
               </label>
               <label>
                 <Field
-                  name="stooge"
+                  name="customerType"
                   component="input"
                   type="radio"
-                  value="moe"
+                  value="b2c"
                 />{' '}
-                Moe
-              </label>
-              <label>
-                <Field
-                  name="stooge"
-                  component="input"
-                  type="radio"
-                  value="curly"
-                />{' '}
-                Curly
+                B2C
               </label>
             </div>
           </div>
@@ -153,6 +137,10 @@ const MyForm = () => (
               Reset
             </button>
           </div>
+          <div>
+            <label>Send To Email</label>
+            <Field name="sendToEmail" component="input" type="checkbox" />
+          </div>
           <pre>{JSON.stringify(values, 0, 2)}</pre>
         </form>
       )}
@@ -163,10 +151,7 @@ const MyForm = () => (
 class App extends Component {
   render() {
     return (      
-      <div className="col-md-6">
-        <h3> Sample Form Container </h3>
-        <MyForm />
-      </div>
+      <MyForm />
     );
   }
 }
