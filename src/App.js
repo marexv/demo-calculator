@@ -26,10 +26,12 @@ const MyForm = () => (
     <Form
       onSubmit={onSubmit}
       initialValues={{ customerType: 'b2b', sendToEmail: true }}
-      render={({ handleSubmit, form, submitting, pristine, values }) => (
-        <form onSubmit={event => {
-          handleSubmit(event).then(() => reset())
-        }}>
+      render={({ handleSubmit, form, reset, submitting, pristine, values }) => (
+        <form
+          onSubmit={event => {
+            handleSubmit(event).then(reset);
+          }}
+        >
           <div>
             <label>Wall Height</label>
             <Field
