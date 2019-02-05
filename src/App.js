@@ -18,7 +18,7 @@ const priceCalc = (props) => {
 }
 
 const MyForm = () => (
-    <Styles>
+  <Styles>
     <h1>🏁 React Final Form - Simple Example</h1>
     <a href="https://github.com/erikras/react-final-form#-react-final-form">
       Read Docs
@@ -27,7 +27,9 @@ const MyForm = () => (
       onSubmit={onSubmit}
       initialValues={{ customerType: 'b2b', sendToEmail: true }}
       render={({ handleSubmit, form, submitting, pristine, values }) => (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={event => {
+          handleSubmit(event).then(() => reset())
+        }}>
           <div>
             <label>Wall Height</label>
             <Field
@@ -150,7 +152,7 @@ const MyForm = () => (
 
 class App extends Component {
   render() {
-    return (      
+    return (
       <MyForm />
     );
   }
