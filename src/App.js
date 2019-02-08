@@ -8,55 +8,93 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const onSubmit = async values => {
   // await sleep(300)
-  priceCalc(values)
-  window.alert(JSON.stringify(values, 0, 2))
+  var price = priceCalc(values);
+  window.alert(price)
 }
 
 const priceCalc = (props) => {
-  console.log(props)
+  var panelPrice = 0;
+
+  if (props.panelType.one){
+    panelPrice = 10;
+  } else if (props.panelType.one){
+    panelPrice = 20;
+  } else {
+    panelPrice = 30;
+  }
+  
+  var price = props.segmentheight * props.segmenwidth * (0.000001) * panelPrice;
+
+  if (props.requirements.radiationProtection){
+    price += 500;
+  }
+
+  if (props.requirements.bulletproofWall){
+    price += 500;
+  }
+
   console.log(props.notes)
+
+  return price;
 }
 
 const MyForm = () => (
   <Styles>
-    <h1>🏁 React Final Form - Simple Example</h1>
-    <a href="https://github.com/erikras/react-final-form#-react-final-form">
-      Read Docs
+    <h1>Knauf - Simple Calculator</h1>
+    <a href="https://knauf.hr/diy/kontakt">
+      help
     </a>
     <Form
       onSubmit={onSubmit}
-      initialValues={{ customerType: 'b2b', sendToEmail: true }}
+      initialValues={{ panelType: 'one', customerType: 'b2b', sendToEmail: true }}
+
+      validate={values => {
+        const errors = {};
+        if (!values.segmentheight) {
+          errors.segmentheight = "Required";
+        } else if (values.segmentheight < 0) {
+          errors.segmentheight = "Must be positive";
+        }
+
+        if (!values.segmenwidth) {
+          errors.segmenwidth = "Required";
+        } else if (values.segmenwidth < 0) {
+          errors.segmenwidth = "Must be positive";
+        }
+
+        return errors;
+      }}
+
       render={({ handleSubmit, form, reset, submitting, pristine, values }) => (
         <form
           onSubmit={event => {
             handleSubmit(event).then(reset);
           }}
         >
-          <div>
-            <label>Wall Height</label>
-            <Field
-              name="segmentheight"
-              component="input"
-              type="number"
-              placeholder="Segment height in mm"
-            />
-          </div>
-          <div>
-            <label>Wall Width</label>
-            <Field
-              name="segmenwidth"
-              component="input"
-              type="number"
-              placeholder="Segment width in mm"
-            />
-          </div>
+          <Field name="segmentheight">
+            {({ input, meta }) => (
+              <div>
+                <label>Wall Height</label>
+                <input {...input} type="number" placeholder="Segment height in mm" />
+                {meta.error && meta.touched && <span>{meta.error}</span>}
+              </div>
+            )}
+          </Field>
+          <Field name="segmenwidth">
+            {({ input, meta }) => (
+              <div>
+                <label>Wall Widtht</label>
+                <input {...input} type="number" placeholder="Segment width in mm" />
+                {meta.error && meta.touched && <span>{meta.error}</span>}
+              </div>
+            )}
+          </Field>
           <div>
             <label>Panel Type</label>
-            <Field name="favoriteColor" component="select">
-              <option />
-              <option value="#ff0000">❤️ Aquapanel Cement Board Floor</option>
-              <option value="#00ff00">💚 Aquapanel Cement Board Floor MF</option>
-              <option value="#0000ff">💙 Aquapanel Indoor Panel</option>
+            <Field name="panelType" component="select">
+              <option value="one">❤️ Aquapanel Cement Board Floor</option>
+              <option value="two">💚 Aquapanel Cement Board Floor MF</option>
+              <option value="three">💙 Aquapanel Indoor Panel</option>
             </Field>
           </div>
           <div>
@@ -67,7 +105,7 @@ const MyForm = () => (
                   name="requirements"
                   component="input"
                   type="checkbox"
-                  value="radiation-protection"
+                  value="radiationProtection"
                 />{' '}
                 Radiation protection
               </label>
@@ -76,7 +114,7 @@ const MyForm = () => (
                   name="requirements"
                   component="input"
                   type="checkbox"
-                  value="bulletproof-wall"
+                  value="bulletproofWall"
                 />{' '}
                 Bulletproof wall
               </label>
@@ -86,7 +124,7 @@ const MyForm = () => (
             <label>Additional</label>
             <Field name="additionl" component="select" multiple>
               <option value="kleber">Aquapanel Nutkleber</option>
-              <option value="tipla">Aquapalne Tiple</option>
+              <option value="tipla">Aquapanel Tiple</option>
               <option value="armierungsband">Aquapanel Armierungsband aussen</option>
               <option value="fugen">Aquapanel Fugen und Flächenspachtel</option>
               <option value="gruierung">Aquapanel Grundierung aussen</option>
@@ -130,7 +168,7 @@ const MyForm = () => (
             <Field name="notes" component="textarea" placeholder="Notes" />
           </div>
           <div className="buttons">
-            <button type="submit" disabled={submitting || pristine}>
+            <button type="submit" disabled={submitting}>
               Submit
             </button>
             <button
