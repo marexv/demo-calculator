@@ -4,6 +4,8 @@ import Styles from './Styles'
 import './App.css';
 import { Form, Field, FormSpy } from 'react-final-form'
 
+const uuid = require('react-native-uuid');
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const priceCalc = (props) => {
@@ -391,7 +393,12 @@ class SegmentDetails extends React.Component {
 }
 
 const Segment = (props) => (
-  <p>Segment Type: {props.segment}</p>
+  <div>
+    <p>Segment Type: {props.segment.segment.panelType}</p>
+    <p>Segment Id: {props.segment.id}</p>
+    <button onClick={props.deleteSegmentOnClick}>delete segment</button>
+    <button>edit segment</button>
+  </div>
 )
 
 class Project extends React.Component {
@@ -405,14 +412,30 @@ class Project extends React.Component {
 
   // save sagment to segments
   saveSegmentOnClick(segment) {
-    const segments = this.state.segments;
-    const id = segments.length;
+    const id = uuid.v1();
 
     this.setState(prevState => ({
       segments: [...prevState.segments, { id, segment }]
     }));
 
     // console.log(segments);
+  }
+  
+  deleteSegmentOnClick(id) {
+    // create copy of existing segments.
+    const segments = this.state.segments.slice();
+
+    // find index which has to be removed.
+    const indexToRemove = segments.findIndex(seg => seg.id === id);
+
+    // remove element from copied list.
+    segments.splice(indexToRemove, 1)
+
+    // update old list to new list.
+    this.setState({
+        segments: segments
+    });
+
   }
 
   loadSegmentOnClick() {
@@ -435,7 +458,6 @@ class Project extends React.Component {
 
   }
 
-
   render() {
 
     return (
@@ -444,8 +466,14 @@ class Project extends React.Component {
 
         <SegmentDetails handleSubmit={(values) => this.saveSegmentOnClick(values)} />
 
-        {this.state.segments.map((segment, id) => {
-          return (<Segment key={id} segment={segment.segment.panelType} />)
+        {this.state.segments.map((segment) => {
+          return (
+            <Segment 
+              key={segment.id} 
+              segment={segment}
+              deleteSegmentOnClick={() => this.deleteSegmentOnClick(segment.id)} 
+            />
+          )
         })}
 
         <button onClick={() => this.handleCompleteProject()}>Save Project</button>
