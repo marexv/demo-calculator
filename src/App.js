@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import Styles from './Styles'
 import './App.css';
-import { Form, Field } from 'react-final-form'
+import { Form, Field, FormSpy } from 'react-final-form'
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -189,11 +189,11 @@ const MyForm = () => (
   </Styles>
 )
 
-const CustomerDetails = () => (
+const CustomerDetails = (props) => (
   <Styles>
     <Form
       onSubmit={onSubmit}
-      initialValues={{ panelType: 'one', customerType: 'b2b', sendToEmail: true }}
+      initialValues={{ customerType: 'b2b' }}
       validate={values => {
         const errors = {};
         if (!values.segmentheight) {
@@ -212,44 +212,52 @@ const CustomerDetails = () => (
       }}
 
       render={({ handleSubmit, form, reset, submitting, pristine, values }) => (
-        <form>
+        <div>
           <div>
-            <label>Customer</label>
-            <Field
-              name="customer"
-              component="input"
-              type="text"
-              placeholder="Customer Name"
-            />
+            <FormSpy onChange={props.onChange} subscription={{ values: true }} />
           </div>
           <div>
-            <label>Customer Type</label>
-            <div>
-              <label>
+            <form>
+              <div>
+                <label>Customer</label>
                 <Field
-                  name="customerType"
+                  name="customer"
                   component="input"
-                  type="radio"
-                  value="b2b"
-                />{' '}
-                B2B
+                  type="text"
+                  placeholder="Customer Name"
+                />
+              </div>
+              <div>
+                <label>Customer Type</label>
+                <div>
+                  <label>
+                    <Field
+                      name="customerType"
+                      component="input"
+                      type="radio"
+                      value="b2b"
+                    />{' '}
+                    B2B
              </label>
-              <label>
-                <Field
-                  name="customerType"
-                  component="input"
-                  type="radio"
-                  value="b2c"
-                />{' '}
-                B2C
+                  <label>
+                    <Field
+                      name="customerType"
+                      component="input"
+                      type="radio"
+                      value="b2c"
+                    />{' '}
+                    B2C
             </label>
-            </div>
+                </div>
+              </div>
+              <div>
+                <label>Notes</label>
+                <Field name="notes" component="textarea" placeholder="Notes" />
+              </div>
+              <pre>{JSON.stringify(values, 0, 2)}</pre>
+            </form>
           </div>
-          <div>
-            <label>Notes</label>
-            <Field name="notes" component="textarea" placeholder="Notes" />
-          </div>
-        </form>
+        </div>
       )}
     />
   </Styles>
@@ -270,7 +278,7 @@ class SegmentDetails extends React.Component {
       <Styles>
         <Form
           onSubmit={this.props.handleSubmit}
-          initialValues={{ panelType: 'one', customerType: 'b2b', sendToEmail: true }}
+          initialValues={{ panelType: 'one'}}
 
           validate={values => {
             const errors = {};
@@ -364,14 +372,14 @@ class SegmentDetails extends React.Component {
                   disabled={submitting}
                 >
                   Save Segment
-            </button>
+                </button>
                 <button
                   type="button"
                   onClick={form.reset}
                   disabled={submitting || pristine}
                 >
                   Reset
-            </button>
+                </button>
               </div>
               <pre>{JSON.stringify(values, 0, 2)}</pre>
             </form>
@@ -391,6 +399,7 @@ class Project extends React.Component {
     super();
     this.state = {
       segments: [],
+      customer: {},
     };
   }
 
@@ -411,15 +420,27 @@ class Project extends React.Component {
   }
 
   handleCompleteProject() {
-    const segments = this.state.segments;
-    alert(JSON.stringify(segments, 0, 2))
+    const document = {
+      "segments": this.state.segments,
+      "customer": this.state.customer,
+    };
+      
+    alert(JSON.stringify(document, 0, 2))
   }
+
+  myOnChange(values) {
+    this.setState({
+      customer: values
+    });
+
+  }
+
 
   render() {
 
     return (
       <div>
-        <CustomerDetails />
+        <CustomerDetails onChange={(values) => this.myOnChange(values)}/>
 
         <SegmentDetails handleSubmit={(values) => this.saveSegmentOnClick(values)} />
 
@@ -427,7 +448,7 @@ class Project extends React.Component {
           return (<Segment key={id} segment={segment.segment.panelType} />)
         })}
 
-        <button onClick={() => this.handleCompleteProject()}>Finish Project</button>
+        <button onClick={() => this.handleCompleteProject()}>Save Project</button>
       </div>
     );
   }
