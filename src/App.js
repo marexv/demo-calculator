@@ -21,6 +21,7 @@ const priceCalc = (props) => {
 
   var price = props.segmentheight * props.segmenwidth * (0.000001) * panelPrice;
 
+  /*
   if (props.requirements.radiationProtection) {
     price += 500;
   }
@@ -28,8 +29,7 @@ const priceCalc = (props) => {
   if (props.requirements.bulletproofWall) {
     price += 500;
   }
-
-  console.log(props.notes)
+  */ 
 
   return price;
 }
@@ -93,9 +93,9 @@ const MyForm = () => (
           <div>
             <label>Panel Type</label>
             <Field name="panelType" component="select">
-              <option value="one">❤️ Aquapanel Cement Board Floor</option>
-              <option value="two">💚 Aquapanel Cement Board Floor MF</option>
-              <option value="three">💙 Aquapanel Indoor Panel</option>
+              <option value="one">1️⃣ Aquapanel Cement Board Floor</option>
+              <option value="two">2️⃣  Aquapanel Cement Board Floor MF</option>
+              <option value="three">3️⃣ Aquapanel Indoor Panel</option>
             </Field>
           </div>
           <div>
@@ -324,9 +324,9 @@ class SegmentDetails extends React.Component {
               <div>
                 <label>Panel Type</label>
                 <Field name="panelType" component="select">
-                  <option value="one">❤️ Aquapanel Cement Board Floor</option>
-                  <option value="two">💚 Aquapanel Cement Board Floor MF</option>
-                  <option value="three">💙 Aquapanel Indoor Panel</option>
+                  <option value="one">1️⃣ Aquapanel Cement Board Floor</option>
+                  <option value="two">2️⃣ Aquapanel Cement Board Floor MF</option>
+                  <option value="three">3️⃣  Aquapanel Indoor Panel</option>
                 </Field>
               </div>
               <div>
@@ -396,6 +396,7 @@ const Segment = (props) => (
   <div>
     <p>Segment Type: {props.segment.segment.panelType}</p>
     <p>Segment Id: {props.segment.id}</p>
+    <p>Segment price: {props.segment.price}</p>
     <button onClick={props.deleteSegmentOnClick}>delete segment</button>
     <button>edit segment</button>
   </div>
@@ -404,9 +405,15 @@ const Segment = (props) => (
 class Project extends React.Component {
   constructor(props) {
     super();
+
+    function getSum(total, num) {
+      return total + num;
+    }
+
     this.state = {
       segments: [],
       customer: {},
+      price: 0,
     };
   }
 
@@ -414,8 +421,11 @@ class Project extends React.Component {
   saveSegmentOnClick(segment) {
     const id = uuid.v1();
 
+    const price = priceCalc(segment);
+
     this.setState(prevState => ({
-      segments: [...prevState.segments, { id, segment }]
+      segments: [...prevState.segments, { id, segment, price }],
+      price: [...prevState.segments, { id, segment, price }].reduce(function (acc, obj) { return acc + obj.price; }, 0)
     }));
 
     // console.log(segments);
@@ -431,9 +441,13 @@ class Project extends React.Component {
     // remove element from copied list.
     segments.splice(indexToRemove, 1)
 
+    // update price:
+    const price = segments.reduce(function (acc, obj) { return acc + obj.price; }, 0)
+
     // update old list to new list.
     this.setState({
-        segments: segments
+        segments: segments,
+        price: price
     });
 
   }
@@ -444,6 +458,7 @@ class Project extends React.Component {
 
   handleCompleteProject() {
     const document = {
+      "totalPrice": this.state.price,
       "segments": this.state.segments,
       "customer": this.state.customer,
     };
@@ -476,7 +491,9 @@ class Project extends React.Component {
           )
         })}
 
-        <button onClick={() => this.handleCompleteProject()}>Save Project</button>
+        <p>Price: {this.state.price}</p>
+
+        <button onClick={() => this.handleCompleteProject()}>Save and send email</button>
       </div>
     );
   }
