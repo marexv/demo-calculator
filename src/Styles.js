@@ -49,7 +49,7 @@ export default styled.div`
     color: #222;
   }
 
-  form {
+  form, .use-style {
     max-width: 500px;
     margin: 10px auto;
     border: 1px solid #ccc;
@@ -114,3 +114,4 @@ export default styled.div`
     }
   }
 `;
+

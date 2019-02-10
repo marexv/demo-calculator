@@ -11,25 +11,17 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 const priceCalc = (props) => {
   var panelPrice = 0;
 
-  if (props.panelType.one) {
+  console.log(props);
+
+  if (props.panelType.Cement_Board) {
     panelPrice = 10;
-  } else if (props.panelType.one) {
+  } else if (props.panelType.Cement_Board_MF) {
     panelPrice = 20;
   } else {
     panelPrice = 30;
   }
 
   var price = props.segmentheight * props.segmenwidth * (0.000001) * panelPrice;
-
-  /*
-  if (props.requirements.radiationProtection) {
-    price += 500;
-  }
-
-  if (props.requirements.bulletproofWall) {
-    price += 500;
-  }
-  */ 
 
   return price;
 }
@@ -38,158 +30,6 @@ const onSubmit = async values => {
   await sleep(300);
   window.alert(JSON.stringify(values, 0, 2));
 };
-
-const MyForm = () => (
-  <Styles>
-    <h1>Knauf - Simple Calculator</h1>
-    <a href="https://knauf.hr/diy/kontakt">
-      help
-    </a>
-    <Form
-      onSubmit={onSubmit}
-      initialValues={{ panelType: 'one', customerType: 'b2b', sendToEmail: true }}
-
-      validate={values => {
-        const errors = {};
-        if (!values.segmentheight) {
-          errors.segmentheight = "Required";
-        } else if (values.segmentheight < 0) {
-          errors.segmentheight = "Must be positive";
-        }
-
-        if (!values.segmenwidth) {
-          errors.segmenwidth = "Required";
-        } else if (values.segmenwidth < 0) {
-          errors.segmenwidth = "Must be positive";
-        }
-
-        return errors;
-      }}
-
-      render={({ handleSubmit, form, reset, submitting, pristine, values }) => (
-        <form
-          onSubmit={event => {
-            handleSubmit(event).then(reset);
-          }}
-        >
-          <Field name="segmentheight">
-            {({ input, meta }) => (
-              <div>
-                <label>Wall Height</label>
-                <input {...input} type="number" placeholder="Segment height in mm" />
-                {meta.error && meta.touched && <span>{meta.error}</span>}
-              </div>
-            )}
-          </Field>
-          <Field name="segmenwidth">
-            {({ input, meta }) => (
-              <div>
-                <label>Wall Widtht</label>
-                <input {...input} type="number" placeholder="Segment width in mm" />
-                {meta.error && meta.touched && <span>{meta.error}</span>}
-              </div>
-            )}
-          </Field>
-          <div>
-            <label>Panel Type</label>
-            <Field name="panelType" component="select">
-              <option value="one">1️⃣ Aquapanel Cement Board Floor</option>
-              <option value="two">2️⃣  Aquapanel Cement Board Floor MF</option>
-              <option value="three">3️⃣ Aquapanel Indoor Panel</option>
-            </Field>
-          </div>
-          <div>
-            <label>Requirements</label>
-            <div>
-              <label>
-                <Field
-                  name="requirements"
-                  component="input"
-                  type="checkbox"
-                  value="radiationProtection"
-                />{' '}
-                Radiation protection
-              </label>
-              <label>
-                <Field
-                  name="requirements"
-                  component="input"
-                  type="checkbox"
-                  value="bulletproofWall"
-                />{' '}
-                Bulletproof wall
-              </label>
-            </div>
-          </div>
-          <div>
-            <label>Additional</label>
-            <Field name="additionl" component="select" multiple>
-              <option value="kleber">Aquapanel Nutkleber</option>
-              <option value="tipla">Aquapanel Tiple</option>
-              <option value="armierungsband">Aquapanel Armierungsband aussen</option>
-              <option value="fugen">Aquapanel Fugen und Flächenspachtel</option>
-              <option value="gruierung">Aquapanel Grundierung aussen</option>
-              <option value="gewebe">Aquapanel Gewebe plus</option>
-            </Field>
-          </div>
-          <div>
-            <label>Customer</label>
-            <Field
-              name="customer"
-              component="input"
-              type="text"
-              placeholder="Customer Name"
-            />
-          </div>
-          <div>
-            <label>Customer Type</label>
-            <div>
-              <label>
-                <Field
-                  name="customerType"
-                  component="input"
-                  type="radio"
-                  value="b2b"
-                />{' '}
-                B2B
-              </label>
-              <label>
-                <Field
-                  name="customerType"
-                  component="input"
-                  type="radio"
-                  value="b2c"
-                />{' '}
-                B2C
-              </label>
-            </div>
-          </div>
-          <div>
-            <label>Notes</label>
-            <Field name="notes" component="textarea" placeholder="Notes" />
-          </div>
-          <div className="buttons">
-            <button type="submit" disabled={submitting}>
-              Submit
-            </button>
-            <button
-              type="button"
-              onClick={form.reset}
-              disabled={submitting || pristine}
-            >
-              Reset
-            </button>
-          </div>
-          <div>
-            <label>Send To Email</label>
-            <Field name="sendToEmail" component="input" type="checkbox" />
-          </div>
-          <pre>{JSON.stringify(values, 0, 2)}</pre>
-        </form>
-      )}
-    />
-  </Styles>
-)
 
 const CustomerDetails = (props) => (
   <Styles>
@@ -256,7 +96,7 @@ const CustomerDetails = (props) => (
                 <label>Notes</label>
                 <Field name="notes" component="textarea" placeholder="Notes" />
               </div>
-              <pre>{JSON.stringify(values, 0, 2)}</pre>
+              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
             </form>
           </div>
         </div>
@@ -265,22 +105,28 @@ const CustomerDetails = (props) => (
   </Styles>
 )
 
-
 class SegmentDetails extends React.Component {
   constructor(props) {
     super();
   }
-
+  
   handleSubmit(values) {
     console.log(values);
   };
-
+  
+  
+  
   render() {
+    
+    var maringLeft0Style = {
+      marginLeft:0,
+    };
+    
     return (
       <Styles>
         <Form
           onSubmit={this.props.handleSubmit}
-          initialValues={{ panelType: 'one'}}
+          initialValues={{ panelType: 'Cement_Board', segmentheight: 900, segmenwidth: 2300 }}
 
           validate={values => {
             const errors = {};
@@ -306,7 +152,7 @@ class SegmentDetails extends React.Component {
               <Field name="segmentheight">
                 {({ input, meta }) => (
                   <div>
-                    <label>Wall Height</label>
+                    <label>X:</label>
                     <input {...input} type="number" placeholder="Segment height in mm" />
                     {meta.error && meta.touched && <span>{meta.error}</span>}
                   </div>
@@ -315,18 +161,17 @@ class SegmentDetails extends React.Component {
               <Field name="segmenwidth">
                 {({ input, meta }) => (
                   <div>
-                    <label>Wall Widtht</label>
+                    <label>Y:</label>
                     <input {...input} type="number" placeholder="Segment width in mm" />
                     {meta.error && meta.touched && <span>{meta.error}</span>}
                   </div>
                 )}
               </Field>
-              <div>
-                <label>Panel Type</label>
-                <Field name="panelType" component="select">
-                  <option value="one">1️⃣ Aquapanel Cement Board Floor</option>
-                  <option value="two">2️⃣ Aquapanel Cement Board Floor MF</option>
-                  <option value="three">3️⃣  Aquapanel Indoor Panel</option>
+              <div style={maringLeft0Style}>
+                <Field name="panelType" component="select" style={maringLeft0Style}>
+                  <option value="Cement_Board">1️⃣ Aquapanel Cement Board Floor</option>
+                  <option value="Cement_Board_MF">2️⃣ Aquapanel Cement Board Floor MF</option>
+                  <option value="Indoor_Panel">3️⃣  Aquapanel Indoor Panel</option>
                 </Field>
               </div>
               <div>
@@ -373,7 +218,7 @@ class SegmentDetails extends React.Component {
                   // onClick={props.onClick}
                   disabled={submitting}
                 >
-                  Save Segment
+                  Add Segment
                 </button>
                 <button
                   type="button"
@@ -383,7 +228,7 @@ class SegmentDetails extends React.Component {
                   Reset
                 </button>
               </div>
-              <pre>{JSON.stringify(values, 0, 2)}</pre>
+              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
             </form>
           )}
         />
@@ -393,22 +238,19 @@ class SegmentDetails extends React.Component {
 }
 
 const Segment = (props) => (
-  <div>
-    <p>Segment Type: {props.segment.segment.panelType}</p>
-    <p>Segment Id: {props.segment.id}</p>
-    <p>Segment price: {props.segment.price}</p>
-    <button onClick={props.deleteSegmentOnClick}>delete segment</button>
-    <button>edit segment</button>
-  </div>
+  <Styles >
+    <div className="use-style">
+      <p>Segment: {props.segment.segment.panelType}, size: {props.segment.segment.segmentheight} x {props.segment.segment.segmenwidth}</p>
+      <p>Segment price: {props.segment.price.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</p>
+      <button onClick={props.deleteSegmentOnClick}>delete segment</button>
+      <button disabled>edit segment</button>
+    </div>
+  </Styles >
 )
 
 class Project extends React.Component {
   constructor(props) {
     super();
-
-    function getSum(total, num) {
-      return total + num;
-    }
 
     this.state = {
       segments: [],
@@ -430,7 +272,7 @@ class Project extends React.Component {
 
     // console.log(segments);
   }
-  
+
   deleteSegmentOnClick(id) {
     // create copy of existing segments.
     const segments = this.state.segments.slice();
@@ -446,14 +288,14 @@ class Project extends React.Component {
 
     // update old list to new list.
     this.setState({
-        segments: segments,
-        price: price
+      segments: segments,
+      price: price
     });
 
   }
 
   loadSegmentOnClick() {
-
+    // TODO
   }
 
   handleCompleteProject() {
@@ -462,9 +304,12 @@ class Project extends React.Component {
       "segments": this.state.segments,
       "customer": this.state.customer,
     };
-      
-    alert(JSON.stringify(document, 0, 2))
-  }
+
+    // JSON.stringify(document, 0, 2))
+
+    alert("Calculation saved, pdf with details has been emaild to you!")
+
+    }
 
   myOnChange(values) {
     this.setState({
@@ -477,28 +322,43 @@ class Project extends React.Component {
 
     return (
       <div>
-        <CustomerDetails onChange={(values) => this.myOnChange(values)}/>
+
+        <Styles >
+          <div className="use-style">
+            <h1>Simple Calculator</h1>
+            <a href="https://knauf.hr/diy/kontakt">
+              help
+            </a>
+          </div>
+        </Styles >
+
+        <CustomerDetails onChange={(values) => this.myOnChange(values)} />
 
         <SegmentDetails handleSubmit={(values) => this.saveSegmentOnClick(values)} />
 
+        <Styles >
+          <div className="use-style">
+            <p>Price: {this.state.price.toLocaleString(navigator.language, { minimumFractionDigits: 2 })}</p>
+
+            <button onClick={() => this.handleCompleteProject()}>Save, generate .pdf and send email</button>
+          </div>
+        </Styles >
+
         {this.state.segments.map((segment) => {
           return (
-            <Segment 
-              key={segment.id} 
+            <Segment
+              key={segment.id}
               segment={segment}
-              deleteSegmentOnClick={() => this.deleteSegmentOnClick(segment.id)} 
+              deleteSegmentOnClick={() => this.deleteSegmentOnClick(segment.id)}
             />
           )
         })}
 
-        <p>Price: {this.state.price}</p>
-
-        <button onClick={() => this.handleCompleteProject()}>Save and send email</button>
       </div>
+
     );
   }
 }
-
 
 class App extends Component {
   render() {
